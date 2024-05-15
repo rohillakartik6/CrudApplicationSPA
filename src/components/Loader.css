@@ -1,0 +1,7 @@
+/*  */
+
+._loading_overlay_content {
+  top: 50%;
+  left: 50%;
+  position: fixed;
+}
