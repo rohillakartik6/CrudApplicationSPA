@@ -201,21 +201,16 @@ const FormDisabledDemo = () => {
 
 
     useEffect(() => {
-        if (id !== undefined) {
-            getStates(data.countryId);
-        }
+        getStates(data.countryId);
     }, [data.countryId])
 
     useEffect(() => {
-        if (id !== undefined) {
-            getCities(data.stateId);
-        }
+        getCities(data.stateId);
     }, [data.stateId])
 
 
 
     const setRequestBody = (request) => {
-        // request.mobileNumber = request.mobileNumber.toString();
         return request
     }
 
