@@ -1,9 +1,7 @@
-import { Flex } from 'antd';
-import './App.css';
-import FormDisabledDemo from "./components/Forms"
-import Employees from './components/Employees';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import './App.css';
+import Employees from './components/Employees';
+import FormDisabledDemo from "./components/Forms";
 import Layout from './components/Layout';
 
 function App() {

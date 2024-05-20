@@ -1,13 +1,14 @@
+import { Button, Checkbox, Flex, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Button, Checkbox, Flex, Space, Table, Tag } from 'antd';
-import { DeleteEmployee, GetEmployees } from '../services/EmployeeService';
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { DeleteEmployee, GetEmployees } from '../services/EmployeeService';
 import Loader from './Loader';
+import { Link, useNavigate } from 'react-router-dom';
 const Employees = () => {
     const [data, setData] = useState([]);
     const [tabelData, setTableData] = useState([]);
     const [isLoader, setIsLoader] = useState(false);
+    const { navigate } = useNavigate();
     const columns = [
         {
             title: 'First Name',
@@ -71,7 +72,7 @@ const Employees = () => {
             key: 'isActive',
             dataIndex: 'isactive',
             render: (_, record) => (
-                <Checkbox value={record?.isActive} disabled className={record.isActive ? "bg-success" : "bg-danger"} />
+                <Checkbox checked={record?.isActive} disabled />
             )
         },
         {
@@ -79,25 +80,33 @@ const Employees = () => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button type='primary'>Edit</Button>
+                    <Link to={`/edit/${record.row_Id}`}>
+                        <Button type='primary' >Edit</Button>
+                    </Link>
                     <Button onClick={() => deleteEmployee(record?.row_Id)} danger>Delete</Button>
                 </Space>
             ),
         },
     ];
+
+
+
     useEffect(() => {
-        const updatedEmployees = data.map(e => ({
-            ...e,
-            gender: e.gender === 1 ? 'Male' : 'Female'
-        }));
-        setTableData(updatedEmployees)
+        console.log(data)
+        if (data.length > 0) {
+            const updatedEmployees = data?.map(e => ({
+                ...e,
+                gender: e.gender === 1 ? 'Male' : 'Female'
+            }));
+            setTableData(updatedEmployees)
+        }
     }, [data])
+
     const getEmployees = async () => {
         try {
             setIsLoader(true)
             const response = await GetEmployees();
             if (response?.status === 200) {
-                //console.log(response?.data?.result);
                 setData(response?.data?.result);
                 setIsLoader(false)
             } else {
@@ -110,7 +119,6 @@ const Employees = () => {
     }
 
     const deleteEmployee = async (id) => {
-        //console.log(id)
         try {
             const response = await DeleteEmployee(id);
             if (response?.status === 204) {
@@ -155,7 +163,6 @@ const Employees = () => {
                     </div>
                 </div>
             </div>
-            {/* <img src={}/> */}
         </>
     )
 };
