@@ -7,6 +7,7 @@ import {
     Radio,
     Select
 } from 'antd';
+import moment from 'moment';
 import { useForm } from 'antd/es/form/Form';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
@@ -106,9 +107,10 @@ const FormDisabledDemo = () => {
                     cityId: data?.cityId,
                     gender: data?.gender,
                     isActive: data?.isActive,
-                    // dateOfBirth: dayjs(data?.dateOfBirth.toISOString(), 'YYYY-MM-DD'),
-                    dateOfJoinee: data?.dateOfJoinee
+                    dateOfBirth: moment(data?.dateOfBirth),
+                    dateOfJoinee: moment(data?.dateOfJoinee)
                 })
+                console.log(moment(data?.dateOfJoinee))
 
                 setData(response?.data?.result);
                 setIsLoader(false)
@@ -321,11 +323,11 @@ const FormDisabledDemo = () => {
                         <Form.Item label="Passport Number" name="passportNumber" rules={[{ type: "regexp", required: true, message: "Passport Number is not valid" }, { required: true, message: "Passport number is required!" }]} validateStatus={isPassportNumberUnique ? 'success' : 'error'}>
                             <Input value={data?.passportNumber} pattern="^[A-Z][0-9]{7}$" maxLength={8} minLength={8} name='passportNumber' onBlur={(e) => duplicateChecker(uniqueFields.passport, e.target.value)} onChange={(e) => setData({ ...data, passportNumber: e.target.value.toUpperCase() })} />
                         </Form.Item>
-                        <Form.Item label="Date of Birth" required>
+                        <Form.Item label="Date of Birth" name='dateOfBirth' required>
                             <DatePicker name='dateOfBirth' maxDate={dayjs(today.toISOString(), 'YYYY-MM-DD')} onChange={(e) => setDate(e, "dateOfBirth")} />
                         </Form.Item>
-                        <Form.Item label="Date of Joining" required>
-                            <DatePicker name='dateOfJoining' onChange={(e) => setDate(e, "dateOfJoinee")} />
+                        <Form.Item label="Date of Joining" name='dateOfJoinee' required>
+                            <DatePicker name='dateOfJoinee' onChange={(e) => setDate(e, "dateOfJoinee")} />
                         </Form.Item>
                         <Form.Item label="Country" name="countryId" rules={[{ required: true, message: "Country is required" }]}>
                             <Select value={data?.countryId} onChange={setCountry} name="countryId">
