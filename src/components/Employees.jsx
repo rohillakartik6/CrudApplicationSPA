@@ -1,14 +1,15 @@
-import { Button, Checkbox, Flex, Space, Table } from 'antd';
+import { Button, Checkbox, Flex, Popconfirm, Space, Table } from 'antd';
+import Search from 'antd/es/transfer/search';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { DeleteEmployee, GetEmployees } from '../services/EmployeeService';
 import Loader from './Loader';
-import { Link, useNavigate } from 'react-router-dom';
 const Employees = () => {
     const [data, setData] = useState([]);
     const [tabelData, setTableData] = useState([]);
     const [isLoader, setIsLoader] = useState(false);
-    const { navigate } = useNavigate();
+    const [searchText, setSearchText] = useState("");
     const columns = [
         {
             title: 'First Name',
@@ -21,18 +22,17 @@ const Employees = () => {
             title: 'Last Name',
             dataIndex: 'lastName',
             key: 'lastName',
-            sorter: (a, b) => a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
         },
         {
             title: 'Email',
             dataIndex: 'emailAddress',
             key: 'emailAddress',
+            sorter: (a, b) => a.emailAddress.toLowerCase().localeCompare(b.emailAddress.toLowerCase()),
         },
         {
             title: 'Country',
             dataIndex: 'countryName',
             key: 'countryId',
-            sorter: (a, b) => a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
         },
         {
             title: 'State',
@@ -58,6 +58,7 @@ const Employees = () => {
             title: 'Gender',
             dataIndex: 'gender',
             key: 'gender',
+            sorter: (a, b) => a.gender.toLowerCase().localeCompare(b.gender.toLowerCase()),
         },
         {
             title: 'Profile Image',
@@ -83,22 +84,40 @@ const Employees = () => {
                     <Link to={`/edit/${record.row_Id}`}>
                         <Button type='primary' >Edit</Button>
                     </Link>
-                    <Button onClick={() => deleteEmployee(record?.row_Id)} danger>Delete</Button>
+                    <Popconfirm
+                        title="Delete user"
+                        description="Are you sure to delete this user?"
+                        okText="Yes"
+                        onConfirm={() => deleteEmployee(record?.row_Id)}
+                        cancelText="No"
+                    >
+                        <Button danger>Delete</Button>
+                    </Popconfirm>
                 </Space>
             ),
         },
     ];
 
-
+    const handleGlobalSearch = (searchTerm) => {
+        setSearchText(searchTerm);
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        const tempData = data.filter(item => {
+            return Object.values(item).some(value =>
+                String(value).toLowerCase().includes(lowerCaseSearchTerm)
+            );
+        });
+        setTableData(tempData)
+    }
 
     useEffect(() => {
-        console.log(data)
         if (data.length > 0) {
             const updatedEmployees = data?.map(e => ({
                 ...e,
                 gender: e.gender === 1 ? 'Male' : 'Female'
             }));
             setTableData(updatedEmployees)
+        } else {
+            setTableData(data)
         }
     }, [data])
 
@@ -140,6 +159,21 @@ const Employees = () => {
             <div className="page-body px-0 py-lg-2 py-1 mt-0 mt-lg-3 ms-3">
                 <div className="container-fluid p-0">
                     <div className="row g-3">
+                        <div className="col-12">
+                            <div className="card">
+                                <div className="card-body">
+                                    <div className="row">
+                                        <div className="">
+                                            <div className="row">
+                                                <div className="col-lg-6 col-md-4 col-sm-3">
+                                                    <Search placeholder="search..." value={searchText} loading enterButton="Search" size="large" onChange={(e) => handleGlobalSearch(e.target.value)} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div className="col-12 mt-1">
                             {isLoader && <Loader />}
                             <div className="card">

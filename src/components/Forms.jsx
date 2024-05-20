@@ -84,16 +84,12 @@ const FormDisabledDemo = () => {
             setIsLoader(true)
             const response = await GetEmployeeById(id);
             if (response?.status === 200) {
-                console.log(response?.data?.result);
                 const data = response?.data?.result;
-                // const image = data.profileImage.slice(24);
                 const imageTemp = {
                     documentName: "Image",
                     base64: data.profileImage.slice(24)
                 }
                 setImage(imageTemp)
-                console.log(imageTemp)
-                // form.setFieldValue('isActive', false)
                 form.setFieldsValue({
                     firstName: data?.firstName,
                     lastName: data?.lastName,
@@ -110,8 +106,6 @@ const FormDisabledDemo = () => {
                     dateOfBirth: moment(data?.dateOfBirth),
                     dateOfJoinee: moment(data?.dateOfJoinee)
                 })
-                console.log(moment(data?.dateOfJoinee))
-
                 setData(response?.data?.result);
                 setIsLoader(false)
             } else {
@@ -133,7 +127,6 @@ const FormDisabledDemo = () => {
             setIsLoader(true)
             if (validateFileSize(e) == true) {
                 const base64 = await convertToBase64(e, "image");
-                console.log(base64)
                 uploadProfileImage(base64);
             } else toast.error("File exceeds 1 MB");
         }
@@ -236,7 +229,6 @@ const FormDisabledDemo = () => {
 
     const handleClick = () => {
         const body = setRequestBody(data);
-        console.log(body)
         saveEmployee(body);
     }
 
@@ -260,7 +252,7 @@ const FormDisabledDemo = () => {
                 }
             }
         } catch (error) {
-            console.log(error);
+            toast.error("Something went wrong.")
         }
     }
 
