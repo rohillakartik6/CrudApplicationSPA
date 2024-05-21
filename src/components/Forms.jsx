@@ -173,11 +173,16 @@ const FormDisabledDemo = () => {
     }
 
     const setCountry = (e) => {
-        setData({ ...data, countryId: e, stateId: "", cityId: "" });
-        // getStates(e);
+        setData({ ...data, countryId: e, stateId: 0, cityId: 0 });
+        form.setFieldValue("stateId", "");
+        form.setFieldValue("cityId", "");
+        getStates(e);
     }
 
     const setState = (e) => {
+        setData({ ...data, stateId: e, cityId: 0 });
+        form.setFieldValue("cityId", "");
+        getCities(e);
         setData({ ...data, stateId: e, cityId: "" });
         // getCities(e);
     }
@@ -221,7 +226,7 @@ const FormDisabledDemo = () => {
             }
         }
         catch (error) {
-            console.error("Something went wrong");
+            toast.error("Something went wrong");
         }
         setIsLoader(false)
     }
@@ -263,7 +268,7 @@ const FormDisabledDemo = () => {
                 {isLoader && <Loader />}
                 <ToastContainer />
                 <div className='container border border-3 rounded p-2'>
-                    <Form onSubmitCapture={handleClick}
+                    <Form onFinish={handleClick}
                         form={form}
                         layout='horizontal'>
                         <Form.Item label="First Name"
@@ -274,10 +279,10 @@ const FormDisabledDemo = () => {
                                     message: 'First Name is mandatory!',
                                 },
                             ]}>
-                            <Input value={data?.firstName} name='firstName' onChange={handleInputChange} />
+                            <Input value={data?.firstName} maxLength={20} name='firstName' onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Last Name" >
-                            <Input value={data?.lastName} name='lastName' onChange={handleInputChange} />
+                            <Input value={data?.lastName} maxLength={20} name='lastName' onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Email Address" name="emailAddress" rules={[
                             {
@@ -289,20 +294,20 @@ const FormDisabledDemo = () => {
                                 message: 'Email address is required',
                             },
                         ]}>
-                            <Input value={data?.emailAddress} name='emailAddress' onChange={handleInputChange} />
+                            <Input value={data?.emailAddress} maxLength={30} name='emailAddress' onChange={handleInputChange} />
                         </Form.Item>
                         <Form.Item label="Mobile Number" name='mobileNumber' rules={[
                             {
-                                len: 10,
-                                required: true,
+                                type: "regexp",
                                 message: "Mobile number is not valid"
                             },
                             {
                                 required: true,
-                                message: 'Mobile address is required',
+                                message: 'Mobile number is required',
                             },
                         ]}>
-                            <Input type='number' addonBefore={"+91"} maxLength={10} minLength={10} value={data?.mobileNumber} name='mobileNumber' onChange={(e) =>
+                            <Input type='number' addonBefore={"+91"} maxLength={10}
+                                pattern="[6-9]{1}[0-9]{9}" minLength={10} value={data?.mobileNumber} name='mobileNumber' onChange={(e) =>
                                 setData({ ...data, mobileNumber: e.target.value })
                             } />
                         </Form.Item>
@@ -315,10 +320,10 @@ const FormDisabledDemo = () => {
                         <Form.Item label="Passport Number" name="passportNumber" rules={[{ type: "regexp", required: true, message: "Passport Number is not valid" }, { required: true, message: "Passport number is required!" }]} validateStatus={isPassportNumberUnique ? 'success' : 'error'}>
                             <Input value={data?.passportNumber} pattern="^[A-Z][0-9]{7}$" maxLength={8} minLength={8} name='passportNumber' onBlur={(e) => duplicateChecker(uniqueFields.passport, e.target.value)} onChange={(e) => setData({ ...data, passportNumber: e.target.value.toUpperCase() })} />
                         </Form.Item>
-                        <Form.Item label="Date of Birth" name='dateOfBirth' required>
+                        <Form.Item label="Date of Birth" name='dateOfBirth' rules={[{ required: true, message: "Date of birth is required" }]}>
                             <DatePicker name='dateOfBirth' maxDate={dayjs(today.toISOString(), 'YYYY-MM-DD')} onChange={(e) => setDate(e, "dateOfBirth")} />
                         </Form.Item>
-                        <Form.Item label="Date of Joining" name='dateOfJoinee' required>
+                        <Form.Item label="Date of Joining" name='dateOfJoinee' rules={[{ required: true, message: "Date of Joining is required" }]}>
                             <DatePicker name='dateOfJoinee' onChange={(e) => setDate(e, "dateOfJoinee")} />
                         </Form.Item>
                         <Form.Item label="Country" name="countryId" rules={[{ required: true, message: "Country is required" }]}>
@@ -366,6 +371,7 @@ const FormDisabledDemo = () => {
                             <Checkbox checked={data.isActive} name='isActive' onChange={(e) => setData({ ...data, isActive: e.target.checked })} > IsActive </Checkbox>
                         </Form.Item>
                         <Button htmlType='submit'>Submit</Button>
+                        <Button onClick={() => toast.success("ADsa")}>CLick</Button>
                     </Form >
                 </div>
             </div>
