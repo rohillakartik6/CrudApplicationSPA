@@ -13,10 +13,9 @@ import dayjs from 'dayjs';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { convertToBase64, validateFileSize } from '../schema/ImageBase64';
 import { GetCities, GetCountries, GetStates } from '../services/DropdownService';
-import { CheckDuplicate, GetEmployeeById, SaveEmployee, UploadProfileImage } from '../services/EmployeeService';
-import DragAndDropFileUpload from './DragAndDropFileUpload';
+import { CheckDuplicate, DeleteProfileImage, GetEmployeeById, SaveEmployee, UploadProfileImage } from '../services/EmployeeService';
+import FileUploader from './FileUploader';
 import Loader from './Loader';
 
 
@@ -33,7 +32,7 @@ const FormDisabledDemo = () => {
     const [isPanNumberUnique, setIsPanNumberUnique] = useState(true);
     const [isPassportNumberUnique, setIsPassportNumberUnique] = useState(true);
     const [isLoader, setIsLoader] = useState(false);
-    const [image, setImage] = useState({ documentName: "", base64: "" });
+    const [uploadedImage, setUploadedImage] = useState("");
     const [messageApi, contextHolder] = useMessage();
     const uniqueFields = {
         pan: "panNumber",
@@ -65,7 +64,7 @@ const FormDisabledDemo = () => {
     const uploadProfileImage = async (base64) => {
         try {
             const body = {
-                base64: base64.base64
+                base64: base64
             }
             const response = await UploadProfileImage(body);
             if (response.data.statusCode = 201) {
@@ -85,6 +84,7 @@ const FormDisabledDemo = () => {
             await messageApi.warning("Session expired. Please sign in again.")
             return navigate("/");
         }
+        setIsLoader(false)
     };
     useEffect(() => {
         checkToken();
@@ -96,11 +96,7 @@ const FormDisabledDemo = () => {
             const response = await GetEmployeeById(id);
             if (response?.status === 200) {
                 const data = response?.data?.result;
-                const imageTemp = {
-                    documentName: "Image",
-                    base64: data.profileImage.slice(24)
-                }
-                setImage(imageTemp)
+                setUploadedImage(data?.profileImageBase64)
                 form.setFieldsValue({
                     firstName: data?.firstName,
                     lastName: data?.lastName,
@@ -128,24 +124,32 @@ const FormDisabledDemo = () => {
         }
     }
 
-    const handleImageDelete = () => {
-        setData({ ...data, profileImage: "" });
-        setImage("");
-    }
-
-    const handleImageChange = async (e) => {
+    const handleImageDelete = async () => {
         try {
             setIsLoader(true)
-            if (validateFileSize(e) == true) {
-                const base64 = await convertToBase64(e, "image");
-                uploadProfileImage(base64);
-            } else await messageApi.error("File exceeds 1 MB");
+            let response;
+            if (data?.profileImage.length > 100) {
+                response = await DeleteProfileImage(data.row_Id.toString());
+            } else {
+                response = await DeleteProfileImage(data.profileImage);
+            }
+            if (response?.status === 204) {
+                setData({ ...data, profileImage: "" })
+                setUploadedImage("");
+                return 204;
+            }
+            else {
+                await messageApi.error("Some error occured while deleting the image");
+                return 500;
+            }
         }
         catch (error) {
             await messageApi.error("Something went wrong. Please try again later")
+            return 500;
+        } finally {
+            setIsLoader(false)
         }
-        setIsLoader(false)
-    };
+    }
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -364,12 +368,7 @@ const FormDisabledDemo = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item label="Profile Picture" valuePropName="fileList" getValueFromEvent={normFile}>
-                            <DragAndDropFileUpload
-                                url={image}
-                                handleDelete={handleImageDelete}
-                                onChange={(e) => handleImageChange(e)}
-                            />
-                            {/* <FileUploader fileUploader={uploadProfileImage} onChange={(e) => handleImageChange(e)} /> */}
+                            <FileUploader url={uploadedImage} fileUploader={uploadProfileImage} handleImageDelete={handleImageDelete} />
                         </Form.Item>
                         <Form.Item name="gender" label="Gender" rules={[{ required: true, message: "Gender is required" }]}>
                             <Radio.Group>

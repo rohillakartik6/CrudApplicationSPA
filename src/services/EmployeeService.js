@@ -60,3 +60,17 @@ export const GetEmployeeById = async (id) => {
     const data = await axios.get(`http://localhost:5005/api/Employee/Employee/${id}`, { headers: headers });
     return data;
 }
+
+export const DeleteProfileImage = async (fileName) => {
+    const headers = {
+        Authorization: localStorage.getItem("token")
+    }
+    const queryParams = {
+        fileName: fileName
+    }
+    const response = await axios.delete(`http://localhost:5005/api/Employee/DeleteProfileImage`, {
+        params: queryParams,
+        headers: headers
+    });
+    return response;
+}

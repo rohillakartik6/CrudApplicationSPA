@@ -44,14 +44,11 @@ const isBase64 = (str) => {
   }
 };
 
-export const validateFileSize = (e) => {
-  const fileSizeLimit = 1000000; //1MB in bytes
-  const file = e.target.files[0];
-
+export const validateFileSize = (file) => {
+  const fileSizeLimit = 204800 ; //200KB in bytes
   if (file && file.size <= fileSizeLimit) {
     return true;
   } else {
-    // alert(`File size should be less than ${fileSizeLimit / 1000000}MB`);
     return false;
   }
 };
