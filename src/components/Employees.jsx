@@ -1,8 +1,8 @@
 import { Button, Checkbox, Flex, Popconfirm, Space, Table } from 'antd';
+import useMessage from 'antd/es/message/useMessage';
 import Search from 'antd/es/transfer/search';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { Link, useNavigate } from 'react-router-dom';
 import { DeleteEmployee, GetEmployees } from '../services/EmployeeService';
 import Loader from './Loader';
 const Employees = () => {
@@ -10,12 +10,13 @@ const Employees = () => {
     const [tabelData, setTableData] = useState([]);
     const [isLoader, setIsLoader] = useState(false);
     const [searchText, setSearchText] = useState("");
+    const [messageApi, contextHolder] = useMessage();
+    const navigate = useNavigate();
     const columns = [
         {
             title: 'First Name',
             dataIndex: 'firstName',
             key: 'firstName',
-            defaultSortOrder: 'descend',
             sorter: (a, b) => a.firstName.toLowerCase().localeCompare(b.firstName.toLowerCase()),
         },
         {
@@ -33,16 +34,19 @@ const Employees = () => {
             title: 'Country',
             dataIndex: 'countryName',
             key: 'countryId',
+            sorter: (a, b) => a.countryName.toLowerCase().localeCompare(b.countryName.toLowerCase()),
         },
         {
             title: 'State',
             dataIndex: 'stateName',
             key: 'stateId',
+            sorter: (a, b) => a.stateName.toLowerCase().localeCompare(b.stateName.toLowerCase()),
         },
         {
             title: 'City',
             dataIndex: 'cityName',
             key: 'cityId',
+            sorter: (a, b) => a.cityName.toLowerCase().localeCompare(b.cityName.toLowerCase()),
         },
         {
             title: 'Pan No',
@@ -59,6 +63,9 @@ const Employees = () => {
             dataIndex: 'gender',
             key: 'gender',
             sorter: (a, b) => a.gender.toLowerCase().localeCompare(b.gender.toLowerCase()),
+            render: (a, record) => (
+                <p>{record?.gender === 1 ? 'Male' : 'Female'}</p>
+            ),
         },
         {
             title: 'Profile Image',
@@ -98,6 +105,17 @@ const Employees = () => {
         },
     ];
 
+    const checkToken = async () => {
+        setIsLoader(true)
+        if (!localStorage.getItem("token")) {
+            await messageApi.warning("Session expired. Please sign in again.")
+            return navigate("/");
+        }
+    };
+    useEffect(() => {
+        checkToken();
+    }, []);
+
     const handleGlobalSearch = (searchTerm) => {
         setSearchText(searchTerm);
         const lowerCaseSearchTerm = searchTerm.toLowerCase();
@@ -106,48 +124,45 @@ const Employees = () => {
                 String(value).toLowerCase().includes(lowerCaseSearchTerm)
             );
         });
-        setTableData(tempData)
+        setTableData(tempData);
     }
 
     useEffect(() => {
-        if (data.length > 0) {
-            const updatedEmployees = data?.map(e => ({
-                ...e,
-                gender: e.gender === 1 ? 'Male' : 'Female'
-            }));
-            setTableData(updatedEmployees)
-        } else {
-            setTableData(data)
-        }
+        setTableData(data)
     }, [data])
 
     const getEmployees = async () => {
+        setIsLoader(true)
         try {
-            setIsLoader(true)
             const response = await GetEmployees();
             if (response?.status === 200) {
                 setData(response?.data?.result);
                 setIsLoader(false)
             } else {
                 console.error("Something went wrong. Please try again later");
-
             }
         } catch (error) {
             console.error("Something went wrong. Please try again later");
+        } finally {
+            setIsLoader(false)
         }
     }
 
     const deleteEmployee = async (id) => {
+        setIsLoader(true)
         try {
             const response = await DeleteEmployee(id);
             if (response?.status === 204) {
-                toast.success(response?.data?.message);
+                await messageApi.success("User deleted successfully");
                 getEmployees();
             } else {
-                toast.error("Something went wrong. Please try again later");
+                await messageApi.error("Something went wrong. Please try again later");
             }
         } catch (error) {
-            toast.error("Something went wrong. Please try again later");
+            await messageApi.error("Something went wrong. Please try again later");
+        }
+        finally {
+            setIsLoader(false)
         }
     }
 
@@ -156,6 +171,7 @@ const Employees = () => {
     }, [])
     return (
         <>
+            {contextHolder}
             <div className="page-body px-0 py-lg-2 py-1 mt-0 mt-lg-3 ms-3">
                 <div className="container-fluid p-0">
                     <div className="row g-3">
