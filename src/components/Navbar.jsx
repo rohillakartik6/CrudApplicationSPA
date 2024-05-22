@@ -1,8 +1,22 @@
-import { Link } from "react-router-dom";
+import useMessage from "antd/es/message/useMessage";
+import { Link, useNavigate } from "react-router-dom";
+import Loader from "./Loader";
+import { useState } from "react";
 
 export default function Navbar() {
+    const [messageApi, contextHolder] = useMessage();
+    const navigate = useNavigate();
+    const [isLoader, setIsLoader] = useState(false);
+    const logout = async () => {
+        setIsLoader(true)
+        await messageApi.loading("Signing off...")
+        localStorage.clear();
+        navigate("/");
+    };
     return (
         <>
+            {contextHolder}
+            {isLoader && <Loader />}
             <nav className="navbar navbar-expand-lg navbar-light bg-light mb-5">
                 <div className="container-fluid">
                     <a className="navbar-brand">CRUD</a>
@@ -16,7 +30,7 @@ export default function Navbar() {
 
                                     <Link
                                         to={"/list"}
-                                        className="btn btn-outline-warning text-dark"
+                                        className="btn btn-outline-warning mx-2 text-dark"
                                     >
                                         View All
                                     </Link>
@@ -27,9 +41,18 @@ export default function Navbar() {
 
                                     <Link
                                         to={"/add"}
-                                        className="btn btn-outline-warning text-dark"
+                                        className="btn btn-outline-warning mx-2 text-dark"
                                     >
                                         Add New
+                                    </Link>
+                                </p>
+                            </li>
+                            <li className="nav-item">
+                                <p>
+                                    <Link
+                                        onClick={logout}
+                                        className="btn btn-outline-dark border mx-2 float-right border-rounded-0">
+                                        Sign out
                                     </Link>
                                 </p>
                             </li>
