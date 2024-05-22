@@ -13,7 +13,6 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [form] = useForm();
   const loginUser = async (body) => {
-    setIsLoader(true)
     try {
       const response = await Login(body);
       if (!response?.data.isError) {
@@ -27,18 +26,17 @@ export default function LoginPage() {
     catch (error) {
       await messageApi.error("Something went wrong");
     }
-    finally {
-      setIsLoader(false)
-    }
   }
 
   const onFinish = (values) => {
+    setIsLoader(true)
     handleRememberMe(values);
     const body = {
       emailAddress: values?.emailAddress,
       password: values?.password
     }
     loginUser(body);
+    setIsLoader(false)
   };
 
   const onFinishFailed = (errorInfo) => {
