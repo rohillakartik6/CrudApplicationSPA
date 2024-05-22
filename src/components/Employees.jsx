@@ -1,4 +1,5 @@
-import { Button, Checkbox, Flex, Popconfirm, Space, Table } from 'antd';
+import { DeleteFilled, EditFilled } from '@ant-design/icons';
+import { Checkbox, Flex, Popconfirm, Space, Table } from 'antd';
 import useMessage from 'antd/es/message/useMessage';
 import Search from 'antd/es/transfer/search';
 import React, { useEffect, useState } from 'react';
@@ -72,7 +73,7 @@ const Employees = () => {
             dataIndex: 'profileImage',
             key: 'profileImage',
             render: (_, record) => (
-                <img src={record?.profileImage} style={{ "height": "50px", "width": "50px" }} />
+                <img src={record?.profileImage} alt='No Image Found' style={{ "height": "50px", "width": "50px" }} />
             ),
         },
         {
@@ -89,7 +90,7 @@ const Employees = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <Link to={`/edit/${record.row_Id}`}>
-                        <Button type='primary' >Edit</Button>
+                        <EditFilled className='text-primary' style={{ fontSize: "20px" }} />
                     </Link>
                     <Popconfirm
                         title="Delete user"
@@ -98,7 +99,7 @@ const Employees = () => {
                         onConfirm={() => deleteEmployee(record?.row_Id)}
                         cancelText="No"
                     >
-                        <Button danger>Delete</Button>
+                        <DeleteFilled className='text-danger' style={{ fontSize: "20px" }} />
                     </Popconfirm>
                 </Space>
             ),
@@ -111,6 +112,7 @@ const Employees = () => {
             await messageApi.warning("Session expired. Please sign in again.")
             return navigate("/");
         }
+        setIsLoader(false)
     };
     useEffect(() => {
         checkToken();
