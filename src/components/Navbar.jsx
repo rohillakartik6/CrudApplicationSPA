@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader";
 import {useState } from "react";
 
-export default function Navbar() {
+export default function Navbar({ token }) {
     const [messageApi, contextHolder] = useMessage();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(false);
@@ -44,6 +44,17 @@ export default function Navbar() {
                                         className="btn btn-outline-warning mx-2 text-dark"
                                     >
                                         Add New
+                                    </Link>
+                                </p>
+                            </li>
+                            <li className="nav-item">
+                                <p>
+
+                                    <Link
+                                        to={"/about-us"}
+                                        className="btn btn-outline-warning mx-2 text-dark"
+                                    >
+                                        About Us
                                     </Link>
                                 </p>
                             </li>

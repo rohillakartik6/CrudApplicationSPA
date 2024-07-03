@@ -11,16 +11,17 @@ function App() {
   return (
     <div className="App">
       <UserProvider>
-      <BrowserRouter >
-        <Routes >
-          <Route path="/" element={<LoginPage />} />
-          <Route element={<Layout />} >
-            <Route path="/list" element={<Employees />} />
-            <Route path="/add" element={<FormDisabledDemo />} />
-            <Route path="/edit/:id" element={<FormDisabledDemo />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+        <BrowserRouter >
+          <Routes >
+            <Route path="/" element={<LoginPage />} />
+            <Route element={<Layout />} >
+              <Route path="/list" element={<Employees />} />
+              <Route path="/add" element={<FormDisabledDemo />} />
+              <Route path="/edit/:id" element={<FormDisabledDemo />} />
+              <Route path="/about-us" element={<AboutUs />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </UserProvider>
     </div>
   );
