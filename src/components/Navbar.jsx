@@ -1,7 +1,7 @@
 import useMessage from "antd/es/message/useMessage";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import { useState } from "react";
+import {useState } from "react";
 
 export default function Navbar() {
     const [messageApi, contextHolder] = useMessage();

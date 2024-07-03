@@ -63,7 +63,7 @@ const Employees = () => {
             title: 'Gender',
             dataIndex: 'gender',
             key: 'gender',
-            sorter: (a, b) => a.gender.toLowerCase().localeCompare(b.gender.toLowerCase()),
+            sorter: (a, b) => a.gender > b.gender,
             render: (a, record) => (
                 <p>{record?.gender === 1 ? 'Male' : 'Female'}</p>
             ),

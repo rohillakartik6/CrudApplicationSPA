@@ -6,18 +6,24 @@ import { Login } from '../services/LoginService';
 import Loader from './Loader';
 import Cookies from "js-cookie";
 import { useForm } from 'antd/es/form/Form';
+import { useContext } from 'react';
+import { UserContext } from '../schema/UserDetails';
 
 export default function LoginPage() {
   const [messageApi, contextHolder] = useMessage();
   const [isLoader, setIsLoader] = useState(false);
   const navigate = useNavigate();
   const [form] = useForm();
+  const { setToken } = useContext(UserContext);
+
+
   const loginUser = async (body) => {
     setIsLoader(true)
     try {
       const response = await Login(body);
       if (!response?.data.isError) {
-        localStorage.setItem("token", response.data.result.token)
+        setToken(response?.data?.result?.token);
+        localStorage.setItem("token", response?.data?.result?.token)
         await messageApi.loading("Signing in...");
         navigate("/list");
       } else {
