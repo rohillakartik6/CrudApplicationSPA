@@ -3,7 +3,7 @@ import useMessage from 'antd/es/message/useMessage';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Login } from '../services/LoginService';
-import Loader from './Loader';
+import Loader from '../components/Loader';
 import Cookies from "js-cookie";
 import { useForm } from 'antd/es/form/Form';
 import { useContext } from 'react';
@@ -82,7 +82,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     getRememberMe();
-  }, [])
+  },[])
 
 
   return (

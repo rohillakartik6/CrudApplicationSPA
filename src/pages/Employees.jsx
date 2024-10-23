@@ -5,7 +5,7 @@ import Search from 'antd/es/transfer/search';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DeleteEmployee, GetEmployees } from '../services/EmployeeService';
-import Loader from './Loader';
+import Loader from '../components/Loader';
 const Employees = () => {
     const [data, setData] = useState([]);
     const [tabelData, setTableData] = useState([]);

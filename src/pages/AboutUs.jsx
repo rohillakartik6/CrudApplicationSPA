@@ -1,4 +1,4 @@
-import DonateButton from "./DonateButton"
+import DonateButton from "../components/DonateButton"
 
 const AboutUs = () => {
     return (

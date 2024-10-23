@@ -15,8 +15,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { GetCities, GetCountries, GetStates } from '../services/DropdownService';
 import { CheckDuplicate, DeleteProfileImage, GetEmployeeById, SaveEmployee, UploadProfileImage } from '../services/EmployeeService';
-import FileUploader from './FileUploader';
-import Loader from './Loader';
+import FileUploader from '../components/FileUploader';
+import Loader from '../components/Loader';
 
 
 const normFile = (e) => {
@@ -25,7 +25,7 @@ const normFile = (e) => {
     }
     return e?.fileList;
 };
-const FormDisabledDemo = () => {
+const AddEditForm = () => {
     const [countries, setCountries] = useState([{ countryId: 0, countryName: "" }]);
     const [states, setStates] = useState([{ stateId: 0, stateName: "" }]);
     const [cities, setCities] = useState([{ cityId: 0, cityName: "" }]);
@@ -386,4 +386,4 @@ const FormDisabledDemo = () => {
         </div>
     );
 };
-export default () => <FormDisabledDemo />;
+export default () => <AddEditForm />;

@@ -1,9 +1,10 @@
 import useMessage from "antd/es/message/useMessage";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "./Loader";
-import {useState } from "react";
+import { useState } from "react";
+import { Switch } from "antd";
 
-export default function Navbar({ token }) {
+export default function Navbar({ theme, setTheme }) {
     const [messageApi, contextHolder] = useMessage();
     const navigate = useNavigate();
     const [isLoader, setIsLoader] = useState(false);
@@ -61,16 +62,36 @@ export default function Navbar({ token }) {
                             <li className="nav-item">
                                 <p>
                                     <Link
+                                        to={"/jokes"}
+                                        className="btn btn-outline-warning mx-2 text-dark"
+                                    >
+                                        Joke Section
+                                    </Link>
+                                </p>
+                            </li>
+                            <li className="nav-item">
+                                <p>
+                                    <Link
                                         onClick={logout}
                                         className="btn btn-outline-dark border mx-2 float-right border-rounded-0">
                                         Sign out
                                     </Link>
                                 </p>
                             </li>
+                            <li className="nav-item">
+                                <p>
+                                    <Switch value={theme} onChange={() => {
+                                        console.log(theme)
+                                        theme >= 1 ? setTheme(0) : setTheme(theme + 1)
+                                    }}>
+                                        Next Theme
+                                    </Switch>
+                                </p>
+                            </li>
                         </ul>
                     </div>
                 </div>
-            </nav>
+            </nav >
         </>
     )
 }
