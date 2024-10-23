@@ -62,10 +62,10 @@ export default function Navbar({ theme, setTheme }) {
                             <li className="nav-item">
                                 <p>
                                     <Link
-                                        to={"/jokes"}
+                                        to={"/url-shortner"}
                                         className="btn btn-outline-warning mx-2 text-dark"
                                     >
-                                        Joke Section
+                                        URL Shortner
                                     </Link>
                                 </p>
                             </li>

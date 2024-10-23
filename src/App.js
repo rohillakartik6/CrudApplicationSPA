@@ -7,11 +7,11 @@ import Employees from './pages/Employees';
 import AddEditForm from './pages/AddEditForm';
 import LoginPage from './pages/LoginPage';
 import AboutUs from './pages/AboutUs';
+import UrlShortner from './pages/UrlShortner';
 import AppLayout from './components/AppLayout';
 
 function App() {
   const [primary, setPrimary] = useState(0);
-  // const { darkAlgorithm, defaultAlgorithm, compactAlgorithm } = theme;
   const themes = [theme.defaultAlgorithm, theme.darkAlgorithm]
 
   return (
@@ -30,7 +30,7 @@ function App() {
                 <Route path="/add" element={<AddEditForm />} />
                 <Route path="/edit/:id" element={<AddEditForm />} />
                 <Route path="/about-us" element={<AboutUs />} />
-                <Route path="/jokes" element={<AboutUs />} />
+                <Route path="/url-shortner" element={<UrlShortner />} />
               </Route>
             </Routes>
           </BrowserRouter>
