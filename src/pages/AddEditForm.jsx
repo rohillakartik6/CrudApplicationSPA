@@ -78,17 +78,9 @@ const AddEditForm = () => {
         }
     }
 
-    const checkToken = async () => {
-        setIsLoader(true)
-        if (!localStorage.getItem("token")) {
-            await messageApi.warning("Session expired. Please sign in again.")
-            return navigate("/");
-        }
-        setIsLoader(false)
-    };
-    useEffect(() => {
-        checkToken();
-    }, []);
+    // useEffect(() => {
+    //     checkToken();
+    // }, []);
 
     const getEmployeeById = async (id) => {
         try {

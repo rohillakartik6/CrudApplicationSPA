@@ -4,7 +4,7 @@ import useMessage from 'antd/es/message/useMessage';
 import Search from 'antd/es/transfer/search';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { DeleteEmployee, GetEmployees } from '../services/EmployeeService';
+import { DeleteEmployee, GetEmployees, GetParallelApiCalls } from '../services/EmployeeService';
 import Loader from '../components/Loader';
 const Employees = () => {
     const [data, setData] = useState([]);
@@ -133,6 +133,12 @@ const Employees = () => {
         setTableData(data)
     }, [data])
 
+    const parallelApiCalls = async () => {
+        console.log(137);
+        const response = await GetParallelApiCalls();
+        return response;
+    }
+
     const getEmployees = async () => {
         setIsLoader(true)
         try {
@@ -196,6 +202,7 @@ const Employees = () => {
                             {isLoader && <Loader />}
                             <div className="card">
                                 <div className="card-body">
+                                    <button onClick={parallelApiCalls}>Parallel API Calls</button>
                                     <div
                                         id="DataTables_Table_2_wrapper"
                                         className="dataTables_wrapper dt-bootstrap5 no-footer">

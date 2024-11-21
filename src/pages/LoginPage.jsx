@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Modal } from 'antd';
 import useMessage from 'antd/es/message/useMessage';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { useForm } from 'antd/es/form/Form';
 import { useContext } from 'react';
 import { UserContext } from '../schema/UserDetails';
+import "../styles/Login.css"
 
 export default function LoginPage() {
   const [messageApi, contextHolder] = useMessage();
@@ -82,92 +83,104 @@ export default function LoginPage() {
 
   useEffect(() => {
     getRememberMe();
-  },[])
+  }, [])
 
 
   return (
     <>
       {contextHolder}
       {isLoader && <Loader />}
-      <div className="page-body">
-        <div className="container-fluid">
-          <div className="col-lg-12 d-flex justify-content-center align-items-center">
-            <div
-              className="card shadow-sm  p-4 p-md-5 mt-5"
-              style={{ width: "32rem" }}>
-              <Form
-                form={form}
-                name="basic"
-                labelCol={{
-                  span: 8,
-                }}
-                wrapperCol={{
-                  span: 16,
-                }}
-                style={{
-                  maxWidth: 600,
-                }}
-                initialValues={{
-                  remember: true,
-                }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-              >
-                <Form.Item
-                  label="Email"
-                  name="emailAddress"
-                  rules={[{
-                    type: "email",
-                    message: "Please input a valid email!",
-                  },
-                  {
-                    required: true,
-                    message: 'Please input your email!',
-                  },
-                  ]}
+      <div className='login-div'>
+        <Modal
+          okButtonProps={{ ghost: true }}
+          footer={null}
+          closable={false}
+          centered
+          width={800}
+          open={true}
+          title="Login"
+        >
+          <div className='row'>
+            <div className='col-lg-6'>
+              <img src='/images/login-image.jpg' />
+            </div>
+            <div className='col-lg-6'>
+              <div
+                className="card shadow-sm  p-4 p-md-5 mt-5">
+                <Form
+                  form={form}
+                  name="basic"
+                  labelCol={{
+                    span: 8,
+                  }}
+                  wrapperCol={{
+                    span: 16,
+                  }}
+                  style={{
+                    maxWidth: 600,
+                  }}
+                  initialValues={{
+                    remember: true,
+                  }}
+                  onFinish={onFinish}
+                  onFinishFailed={onFinishFailed}
+                  autoComplete="off"
                 >
-                  <Input />
-                </Form.Item>
-
-                <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[
+                  <Form.Item
+                    label="Email"
+                    name="emailAddress"
+                    rules={[{
+                      type: "email",
+                      message: "Please input a valid email!",
+                    },
                     {
                       required: true,
-                      message: 'Please input your password!',
+                      message: 'Please input your email!',
                     },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
 
-                <Form.Item
-                  name="remember"
-                  valuePropName="checked"
-                  wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                  }}
-                >
-                  <Checkbox defaultChecked={false}>Remember me</Checkbox>
-                </Form.Item>
+                  <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please input your password!',
+                      },
+                    ]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
 
-                <Form.Item
-                  wrapperCol={{
-                    offset: 8,
-                    span: 16,
-                  }}
-                >
-                  <Button type="primary" htmlType="submit">
-                    Submit
-                  </Button>
-                </Form.Item>
-              </Form>
+                  <Form.Item
+                    name="remember"
+                    valuePropName="checked"
+                    wrapperCol={{
+                      offset: 8,
+                      span: 16,
+                    }}
+                  >
+                    <Checkbox defaultChecked={false}>Remember me</Checkbox>
+                  </Form.Item>
+
+                  <Form.Item
+                    wrapperCol={{
+                      offset: 8,
+                      span: 16,
+                    }}
+                  >
+                    <Button type="primary" htmlType="submit">
+                      Submit
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </div>
             </div>
           </div>
-        </div>
+        </Modal>
       </div>
     </>
   )

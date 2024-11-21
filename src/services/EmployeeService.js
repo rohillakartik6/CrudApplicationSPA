@@ -74,3 +74,20 @@ export const DeleteProfileImage = async (fileName) => {
     });
     return response;
 }
+
+export const GetParallelApiCalls = async () => {
+    const headers = {
+        Authorization: localStorage.getItem("token")
+    }
+    const userWithId16 = axios.get(`http://localhost:5005/api/Employee/Employee/16`, { headers: headers });
+    const userWithId17 = axios.get(`http://localhost:5005/api/Employee/Employee/17`, { headers: headers });
+    const userWithId18 = axios.get(`http://localhost:5005/api/Employee/Employee/18`, { headers: headers });
+    const userWithId19 = axios.get(`http://localhost:5005/api/Employee/Employee/19`, { headers: headers });
+    const userWithId20 = axios.get(`http://localhost:5005/api/Employee/Employee/20`, { headers: headers });
+    const userWithId21 = axios.get(`http://localhost:5005/api/Employee/Employee/21`, { headers: headers });
+    const userWithId22 = axios.get(`http://localhost:5005/api/Employee/Employee/22`, { headers: headers });
+    const endPoints = [userWithId16, userWithId17, userWithId18, userWithId19, userWithId20, userWithId21, userWithId22];
+    const response = await axios.all(endPoints);
+    response.map((d, i) => console.log(d));
+    return response;
+}

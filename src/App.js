@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import './styles/App.css';
 import { UserProvider } from './schema/UserDetails';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import AboutUs from './pages/AboutUs';
 import UrlShortner from './pages/UrlShortner';
 import AppLayout from './components/AppLayout';
+import ClassComponent from './pages/ClassComponent';
 
 function App() {
   const [primary, setPrimary] = useState(0);
@@ -26,6 +27,7 @@ function App() {
             <Routes >
               <Route path="/" element={<LoginPage />} />
               <Route element={<AppLayout theme={primary} setTheme={setPrimary} />} >
+                <Route path='/class' element={<ClassComponent />} />
                 <Route path="/list" element={<Employees />} />
                 <Route path="/add" element={<AddEditForm />} />
                 <Route path="/edit/:id" element={<AddEditForm />} />

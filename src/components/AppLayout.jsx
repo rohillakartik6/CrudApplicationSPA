@@ -1,13 +1,17 @@
-import { Flex, Layout, Menu } from "antd";
+import { Button, Flex, Layout, Menu } from "antd";
 import Navbar from "./Navbar";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../schema/UserDetails";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import UrlShortner from "../pages/UrlShortner";
+import useMessage from 'antd/es/message/useMessage';
 
-export default function AppLayout({ theme, setTheme }) {
+
+export default function AppLayout() {
     const navigate = useNavigate();
+    const [isLoader, setIsLoader] = useState(false);
+    const [messageApi, contextHolder] = useMessage();
     const headerMenu = [
         {
             key: "list",
@@ -69,8 +73,22 @@ export default function AppLayout({ theme, setTheme }) {
         maxWidth: 'calc(50% - 8px)',
     };
 
+    const checkToken = async () => {
+        setIsLoader(true)
+        console.log("checkToken", 78)
+        if (!localStorage.getItem("token")) {
+            await messageApi.warning("Session expired. Please sign in again.")
+            return navigate("/");
+        }
+        setIsLoader(false)
+    };
+
+    useEffect(() => {
+        checkToken();
+    }, [window.location.href])
+
     return (
-        <Layout>
+        <Layout >
             {/* <Navbar theme={theme} setTheme={setTheme} /> */}
             <Header style={headerStyle}>
                 <div className="demo-logo" >CRUD</div>
@@ -80,11 +98,12 @@ export default function AppLayout({ theme, setTheme }) {
                     items={headerMenu}
                     mode="horizontal"
                 />
+                <Button onClick={() => window.location.replace("/")}> Redirect</Button>
             </Header>
             <Content style={contentStyle}>
-                <Flex justify='center' align='center'>
-                    <Outlet />
-                </Flex>
+                {/* <Flex> */}
+                <Outlet loader={isLoader}/>
+                {/* </Flex> */}
             </Content>
             <Footer style={footerStyle} />
         </Layout>
